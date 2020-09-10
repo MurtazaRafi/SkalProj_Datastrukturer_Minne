@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace SkalProj_Datastrukturer_Minne
 {
@@ -13,6 +14,7 @@ namespace SkalProj_Datastrukturer_Minne
         /// <param name="args"></param>
         static void Main()
         {
+
             // Testing to reverse text with stack
             // Console.WriteLine(ReverseText("Hello");
 
@@ -134,8 +136,9 @@ namespace SkalProj_Datastrukturer_Minne
             }
 
             // Fråga 2 och 3: När det första elementet läggs till i listan (till 4) och sedan när femte läggs till (till 8, till 16) osv.
-            // Fråga 5: För att varje gång kapaciteten ökar så kopieras de gamla (och nya) elementen till en ny array. Det här kan bli kostsamt om den gör för varje ökning i count
+            // Fråga 4: För att varje gång kapaciteten ökar så kopieras de gamla (och nya) elementen till en ny array. Det här kan bli kostsamt om den gör för varje ökning i count
             // Fråga 5: Nej, den behåller sin kapacitet.
+            // Fråga 6: När man vet i förhand storleken på arrayen och inte vill ändra det sen (lägga till/ ta bort element)
         }
 
         // Method for checking if an input is not empty
@@ -315,75 +318,58 @@ namespace SkalProj_Datastrukturer_Minne
             return reversedText;
         }
 
+
+
+
         static void CheckParanthesis()
         {
-            /*
-             * Use this method to check if the paranthesis in a string is Correct or incorrect.
-             * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
-             * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
-             */
+        /*
+         * Use this method to check if the paranthesis in a string is Correct or incorrect.
+         * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
+         * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
+         */
 
-            // Jag vill använda stack för att man kan ta den senaste öppna parantesen och jämföra med stängningsparantesen
+        // Fråga: Jag vill använda stack för att man kan ta den senaste öppna parantesen och jämföra med stängningsparantesen
 
-            while (true)
+            Console.WriteLine("Enter a string with paranthesis to check if the paranthesis are opened and closed correctly");
+            Dictionary<char, char> ParanthesisPairs = new Dictionary<char, char>() {
+                { '(', ')' },
+                { '{', '}' },
+                { '[', ']' }
+                };
+            string input = Console.ReadLine();
+            bool correct = true;
+
+            Stack<char> openingParanthesis = new Stack<char>();
+            foreach (char c in input)
             {
-                Console.WriteLine("Enter a string with paranthesis to check if the parthesis are opened and closed correctly");
-                string input = Console.ReadLine();
-                if (string.IsNullOrEmpty(input))
-                    Console.WriteLine("You must give a string input");
-                else
+                if (ParanthesisPairs.ContainsKey(c))
+                    openingParanthesis.Push(c);
+
+                if (ParanthesisPairs.ContainsValue(c))
                 {
-                    Stack<char> stack = new Stack<char>();
-                    bool error = false;
-                    foreach (var c in input.ToCharArray())
+                    if (openingParanthesis.Count == 0)
                     {
-                        if (c == '(' || c == '{' || c == '[')
-                            stack.Push(c);
-                        else if (c == ')' || c == '}' || c == ']')
-                        {
-                            if (stack.Peek() != ComplementParanthesis(c))
-                            {
-                                error = true;
-                                break;
-                            }
-                            stack.Pop();
-                        }
+                        correct = false;
+                        break;
                     }
-                    //ToDo fixa så att ")" och ()( ej accepteras  
-
-                    if (error)
-                        Console.WriteLine("The paranthesis are not closed correctly");
+                    else if (c == ParanthesisPairs[openingParanthesis.Peek()])
+                        openingParanthesis.Pop();
                     else
-                        Console.WriteLine("The paranthesis are closed correctly");
-                    break;
-
+                    {
+                        correct = false;
+                        break;
+                    }
                 }
             }
-        }
 
-        // Help function for CheckParanthesis method
-        private static char ComplementParanthesis(char c)
-        {
-            char complementParanthesis;
+            if(correct)
+            correct = openingParanthesis.Count == 0;
 
-            switch (c)
-            {
-                case ')':
-                    complementParanthesis = '(';
-                    break;
-                case '}':
-                    complementParanthesis = '{';
-                    break;
-                case ']':
-                    complementParanthesis = '[';
-                    break;
-                default:
-                    complementParanthesis = ' ';
-                    break;
-            }
-            return complementParanthesis;
+            Console.WriteLine($"The string is {correct}");
         }
     }
+
 }
 
 
