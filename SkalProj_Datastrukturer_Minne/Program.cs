@@ -318,9 +318,7 @@ namespace SkalProj_Datastrukturer_Minne
             return reversedText;
         }
 
-
-
-
+        // Method for checking if a string has correct paranthesis
         static void CheckParanthesis()
         {
         /*
@@ -343,16 +341,19 @@ namespace SkalProj_Datastrukturer_Minne
             Stack<char> openingParanthesis = new Stack<char>();
             foreach (char c in input)
             {
+                // Add opening paranthesis
                 if (ParanthesisPairs.ContainsKey(c))
                     openingParanthesis.Push(c);
 
                 if (ParanthesisPairs.ContainsValue(c))
                 {
+                    // check if stack is empty
                     if (openingParanthesis.Count == 0)
                     {
                         correct = false;
                         break;
                     }
+                    // Remove the latest opening paranthesis if paranthsis are complemented
                     else if (c == ParanthesisPairs[openingParanthesis.Peek()])
                         openingParanthesis.Pop();
                     else
@@ -363,6 +364,7 @@ namespace SkalProj_Datastrukturer_Minne
                 }
             }
 
+            // Final check if all paranthesis are closed
             if(correct)
             correct = openingParanthesis.Count == 0;
 
